@@ -7,16 +7,20 @@
     "doc": "doc"
   },
   "scripts": {
-    "test": "nodemon generator.js"
+    "test": "nodemon generator.js",
+    "genDocs": "jsdoc ./generator.js -c ../../../jsDoc/config.json -d docs README.md"
   },
   "repository": {
     "type": "git",
-    "url": "https//github.com/"
+    "url": "https://github.com/40thoughts/node-wordgenie.git"
   },
   "keywords": [
     "word",
-    "generator"
+    "generator",
+    "wordgenerator",
+    "name",
+    "namegenerator"
   ],
   "author": "40thoughts",
-  "license": "ISC"
+  "license": "MIT"
 }
