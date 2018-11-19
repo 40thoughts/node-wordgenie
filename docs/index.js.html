@@ -44,7 +44,98 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>"use strict";
-var util = require("util");
+//var util = require("util");
+
+
+/**
+ * Find the next character of a word.
+ * @memberOf module:index
+ * @private
+ * @param {map} map - A map of probabilities.
+ * @param {array} word - The array of preceding character of the current word.
+ * @return {string} The next character.
+ */
+function findChar(map, word) {
+  let _lastChar = word.splice(word.length - 1,1);
+  map = map.get(`${_lastChar}`);
+  
+  if (typeof map.values().next().value == "number") {
+    let _rand = Math.random();
+    let _acc = 0;
+    for (var [key, val] of map) {
+      _acc += val;
+      if (_rand &lt;= _acc) return key;
+    }
+  } else {
+    return findChar(map, word);
+  }
+}
+
+
+/**
+ * Normalize the map of probabilities for each character chain from 0 to 1.
+ * This is used to normalize the probability of each character to appear after a specific chain of characters in a scale form 0 to 1 (float number) instead of random integers.
+ * @memberOf module:index
+ * @private
+ * @param {map} map - The map of probabilities.
+ */
+function normalize(map) {
+  if (typeof map.values().next().value == "number") {
+    let _map = [...map];
+    let _acc = _map.reduce((acc, char) => acc + char[1], 0);
+    
+    map.forEach((val, key) => {
+      map.set(`${key}`, val / _acc);
+    });
+  } else {
+    map.forEach((val, key) => {
+      let _map = map.get(`${key}`);
+      normalize(_map);
+    });
+  }
+}
+
+
+/**
+ * Increment probabilities of a character to appear after a specific chain of characters.
+ * @memberOf module:index
+ * @private
+ * @param {array} arr - The array of characters preceding the current character.
+ * @param {map} map - The map of probabilities.
+ * @param {string} char - The character to increment.
+ */
+function incStat(arr, map, char) {
+  let _lastChar = arr.splice(arr.length-1,1);
+  let _map = map.get(`${_lastChar}`);
+  if (arr.length > 0) {
+    incStat(arr, _map, char);
+  } else {
+    if (!_map.has(`${char}`)) {
+      _map.set(`${char}`, 0);
+    }
+    _map.set(`${char}`, _map.get(`${char}`) + 1);
+  }
+}
+
+
+/**
+ * Generate the tree of probabilities for each substring passed in.
+ * @memberOf module:index
+ * @private
+ * @param {array} arr - The array of characters from the substring.
+ * @param {map} map - A map of probabilities.
+ * @param {set} chars - The set of all used chars.
+ */
+function genStats(arr, map, chars) {
+  if (arr.length > 0) {
+    let _char = arr.splice(arr.length - 1,1);
+    if (!map.has(`${_char}`)) {
+      map.set(`${_char}`, new Map());
+    }
+    map = map.get(`${_char}`);
+    genStats(arr, map, chars);
+  }
+}
 
 
 /**
@@ -52,6 +143,7 @@ var util = require("util");
  * @module
  * @return {Generator} {@Link module:index~Generator Generator} class.
  */
+
 class Generator {
   /**
    * Create a generator instance.
@@ -174,101 +266,10 @@ class Generator {
     return _words;
   }
   
-  get export() {
+  /*get export() {
     //return JSON.stringify([...this.stats]);
     return util.inspect(this.stats, true, null, false);
-  }
-}
-
-
-/**
- * Find the next character of a word.
- * @private
- * @param {map} map - A map of probabilities.
- * @param {array} word - The array of preceding character of the current word.
- * @return {string} The next character.
- */
-function findChar(map, word) {
-  let _lastChar = word.splice(word.length - 1,1);
-  map = map.get(`${_lastChar}`);
-  
-  if (typeof map.values().next().value == "number") {
-    let _rand = Math.random();
-    let _acc = 0;
-    for (var [key, val] of map) {
-      _acc += val;
-      if (_rand &lt;= _acc) {
-        return key;
-      }
-    }
-  } else {
-    return findChar(map, word);
-  }
-}
-
-
-/**
- * Normalize the map of probabilities for each character chain from 0 to 1.
- * This is used to normalize the probability of each character to appear after a specific chain of characters in a scale form 0 to 1 (float number) instead of random integers.
- * @private
- * @param {map} map - The map of probabilities.
- */
-function normalize(map) {
-  let _acc = 0;
-  map.forEach((val, key) => {
-    if (typeof val == "number") {
-      _acc += val;
-    } else {
-      let _map = map;
-      _map = _map.get(`${key}`);
-      normalize(_map);
-    }
-  });
-  if (_acc > 0) {
-    map.forEach((val, key) => {
-      map.set(`${key}`, val / _acc);
-    });
-  }
-}
-
-
-/**
- * Increment probabilities of a character to appear after a specific chain of characters.
- * @private
- * @param {array} arr - The array of characters preceding the current character.
- * @param {map} map - The map of probabilities.
- * @param {string} char - The character to increment.
- */
-function incStat(arr, map, char) {
-  let _lastChar = arr.splice(arr.length-1,1);
-  let _map = map.get(`${_lastChar}`);
-  if (arr.length > 0) {
-    incStat(arr, _map, char);
-  } else {
-    if (!_map.has(`${char}`)) {
-      _map.set(`${char}`, 0);
-    }
-    _map.set(`${char}`, _map.get(`${char}`) + 1);
-  }
-}
-
-
-/**
- * Generate the tree of probabilities for each substring passed in.
- * @private
- * @param {array} arr - The array of characters from the substring.
- * @param {map} map - A map of probabilities.
- * @param {set} chars - The set of all used chars.
- */
-function genStats(arr, map, chars) {
-  if (arr.length > 0) {
-    let _char = arr.splice(arr.length - 1,1);
-    if (!map.has(`${_char}`)) {
-      map.set(`${_char}`, new Map());
-    }
-    map = map.get(`${_char}`);
-    genStats(arr, map, chars);
-  }
+  }*/
 }
 
 
@@ -287,7 +288,7 @@ module.exports = exports = Generator;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Nov 19 2018 16:48:09 GMT+0100 (CET) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Nov 19 2018 23:16:21 GMT+0100 (CET) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
