@@ -62,19 +62,11 @@ class Generator {
       let _word = word;
       for (let c = 0; c < _word.length; c++) {
         _chars.add(_word.charAt(c));
-        if (c >= this.markovLen) {
-          let _subString = new String();
-          for (let x = this.markovLen-1; x >= 0; x--) {
-            _subString += _word[c-x];
-          }
-          _subStrings.add(_subString);
-        } else {
-          let _subString = new String();
-          for (let x = c; x >= 0; x--) {
-            _subString += _word[c-x];
-          }
-          _subStrings.add(_subString);
+        let _subString = new String();
+        for (let x = Math.min(this.markovLen - 1, c); x >= 0; x--) {
+          _subString += _word.charAt(c - x);
         }
+        _subStrings.add(_subString);
       }
     });
     
