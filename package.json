@@ -2,13 +2,10 @@
   "name": "wordgenie",
   "version": "1.0.0",
   "description": "Word generator based on Markov chain with personal word list",
-  "main": "generator.js",
-  "directories": {
-    "doc": "doc"
-  },
+  "main": "index.js",
   "scripts": {
     "test": "nodemon generator.js",
-    "genDocs": "jsdoc ./generator.js -c ../../../jsDoc/config.json -d docs README.md"
+    "genDocs": "jsdoc ./ -c ../../../jsDoc/config.json -d docs README.md"
   },
   "repository": {
     "type": "git",
@@ -16,11 +13,13 @@
   },
   "keywords": [
     "word",
+    "name",
     "generator",
     "wordgenerator",
-    "name",
-    "namegenerator"
+    "namegenerator",
+    "word-generator",
+    "name-generator"
   ],
-  "author": "40thoughts",
+  "author": "40thoughts <40thoughts@gmail.com>",
   "license": "MIT"
 }

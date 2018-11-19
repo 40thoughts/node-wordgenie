@@ -28,7 +28,7 @@
     
     <input type="text" id="nav-search" placeholder="Search" />
     
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module-generator-Generator.html">Generator</a><ul class='methods'><li data-type='method'><a href="module-generator-Generator.html#analyze">analyze</a></li><li data-type='method'><a href="module-generator-Generator.html#genSet">genSet</a></li><li data-type='method'><a href="module-generator-Generator.html#genWord">genWord</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-generator.html">generator</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module-index-Generator.html">Generator</a><ul class='methods'><li data-type='method'><a href="module-index-Generator.html#analyze">analyze</a></li><li data-type='method'><a href="module-index-Generator.html#genSet">genSet</a></li><li data-type='method'><a href="module-index-Generator.html#genWord">genWord</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-index.html">index</a></li></ul>
 </nav>
 
 <div id="main">
@@ -46,7 +46,7 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-generator.html">generator</a>~</span>
+            <span class="ancestors"><a href="module-index.html">index</a>~</span>
         
         Generator
         </h2>
@@ -74,7 +74,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="generator.js.html">generator.js</a>, <a href="generator.js.html#line29">line 29</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -286,16 +286,16 @@
             
                 <td class="default">
                 
-                    <code>'!'</code>
+                    <code>"!"</code>
                 
                 </td>
             
 
             <td class="description last">The default character at the beginning of a word when analyzing/generating.
        Use one that is not in any word of the original list.
-       This character is used internally, please do not add it in the original word list that you pass in (good word: 'doctor', NOT good: '!doctor?').
+       This character is used internally, please do not add it in the original word list that you pass in (good word: "doctor", NOT good: "!doctor?").
        It's just meant to mark the starting point of a word.
-       Note: If this character ('!') may appear in you original list, change it to something that don't. Ex.: '£' or '$'.</td>
+       Note: If this character ("!") may appear in you original list, change it to something that don't. Ex.: "£" or "$".</td>
         </tr>
 
     
@@ -329,7 +329,7 @@
             
                 <td class="default">
                 
-                    <code>'?'</code>
+                    <code>"?"</code>
                 
                 </td>
             
@@ -517,7 +517,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="generator.js.html">generator.js</a>, <a href="generator.js.html#line50">line 50</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -558,7 +558,7 @@
 
 <div class="description">
     Analyse the word list passed in.
-The use of this method is mandatory before using the "generate" method since you have to compute the probabilities of each character to appear before being able to generate words.
+The use of this method is mandatory before using the <a href="module-index-Generator.html#genWord">genWord</a> or <a href="module-index-Generator.html#genSet">genSet</a> methods since you have to compute the probabilities of each character to appear before being able to generate words.
 </div>
 
 
@@ -571,7 +571,7 @@ The use of this method is mandatory before using the "generate" method since you
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>Generator.analyze(Set { 'home', 'coding', 'generator' });</code></pre>
+    <pre class="prettyprint"><code>Generator.analyze(Set { "home", "coding", "generator" });</code></pre>
 
 
 
@@ -656,7 +656,7 @@ The use of this method is mandatory before using the "generate" method since you
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="generator.js.html">generator.js</a>, <a href="generator.js.html#line136">line 136</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -710,7 +710,7 @@ The use of this method is mandatory before using the "generate" method since you
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>Generator.generate(3);
-// returns: Set { 'home', 'coding', 'generator' }</code></pre>
+// returns: Set { "home", "coding", "generator" }</code></pre>
 
 
 
@@ -837,7 +837,7 @@ The use of this method is mandatory before using the "generate" method since you
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="generator.js.html">generator.js</a>, <a href="generator.js.html#line109">line 109</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line105">line 105</a>
     </li></ul></dd>
     
 
@@ -891,7 +891,7 @@ The use of this method is mandatory before using the "generate" method since you
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>Generator.genWord();
-// returns: 'generator'</code></pre>
+// returns: "generator"</code></pre>
 
 
 
@@ -952,7 +952,7 @@ The use of this method is mandatory before using the "generate" method since you
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Nov 19 2018 00:13:58 GMT+0100 (CET) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Nov 19 2018 14:41:08 GMT+0100 (CET) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

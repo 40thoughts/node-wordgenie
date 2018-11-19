@@ -1,10 +1,11 @@
-'use strict';
-var util = require('util');
+"use strict";
+var util = require("util");
 
 
 /**
- * Class representing the word generator
- * @module generator
+ * Module exporting the {@Link module:index~Generator Generator} class.
+ * @module
+ * @return {Generator} {@Link module:index~Generator Generator} class.
  */
 class Generator {
   /**
@@ -15,12 +16,12 @@ class Generator {
    *        Highest values will give you less variety in the generated words since they would look just like in the original word list.
    *        Avoid high values unless you turn config.allowExist back on.
    * @param {object} [config] - The configuration of the generator.
-   * @param {string} [config.wordStart='!'] - The default character at the beginning of a word when analyzing/generating.
+   * @param {string} [config.wordStart="!"] - The default character at the beginning of a word when analyzing/generating.
    *        Use one that is not in any word of the original list.
-   *        This character is used internally, please do not add it in the original word list that you pass in (good word: 'doctor', NOT good: '!doctor?').
+   *        This character is used internally, please do not add it in the original word list that you pass in (good word: "doctor", NOT good: "!doctor?").
    *        It's just meant to mark the starting point of a word.
-   *        Note: If this character ('!') may appear in you original list, change it to something that don't. Ex.: '£' or '$'.
-   * @param {string} [config.wordEnd='?'] - The default character at the end of a word when analyzing/generating.
+   *        Note: If this character ("!") may appear in you original list, change it to something that don't. Ex.: "£" or "$".
+   * @param {string} [config.wordEnd="?"] - The default character at the end of a word when analyzing/generating.
    *        Use one that is not in any word of the original list (as above).
    * @param {number} [config.minLength=1] - The minimum length of a word.
    * @param {number} [config.maxLength=20] - The maximum length of a word.
@@ -28,8 +29,8 @@ class Generator {
    */
   constructor(markovLen = 2, config = {}) {
     let _config = {
-      wordStart: '!',
-      wordEnd: '?',
+      wordStart: "!",
+      wordEnd: "?",
       minLength: 1,
       maxLength: 20,
       allowExist: false
@@ -42,13 +43,12 @@ class Generator {
   
   /**
    * Analyse the word list passed in.
-   * The use of this method is mandatory before using the "generate" method since you have to compute the probabilities of each character to appear before being able to generate words.
+   * The use of this method is mandatory before using the {@link module:index~Generator#genWord genWord} or {@link module:index~Generator#genSet genSet} methods since you have to compute the probabilities of each character to appear before being able to generate words.
    * @param {set} words - The word list.
    * @example
-   * Generator.analyze(Set { 'home', 'coding', 'generator' });
+   * Generator.analyze(Set { "home", "coding", "generator" });
    */
   analyze(words) {
-    //console.log(words);
     let _chars = new Set();
     let _subStrings = new Set();
     let _words = new Set();
@@ -60,22 +60,18 @@ class Generator {
     
     _words.forEach((word) => {
       let _word = word;
-      //console.log('Word : ' + _word);
       for (let c = 0; c < _word.length; c++) {
-        _chars.add(_word[c]);
-        //console.log('Character : ' + _word[c]);
+        _chars.add(_word.charAt(c));
         if (c >= this.markovLen) {
-          let _subString = '';
+          let _subString = new String();
           for (let x = this.markovLen-1; x >= 0; x--) {
             _subString += _word[c-x];
-            //console.log('Syll : ' + _subString);
           }
           _subStrings.add(_subString);
         } else {
-          let _subString = '';
+          let _subString = new String();
           for (let x = c; x >= 0; x--) {
             _subString += _word[c-x];
-            //console.log('Syll : ' + _subString);
           }
           _subStrings.add(_subString);
         }
@@ -104,20 +100,20 @@ class Generator {
    * @return {string} The word generated.
    * @example
    * Generator.genWord();
-   * // returns: 'generator'
+   * // returns: "generator"
    */
   genWord() {
     while (true) {
-      let _word = ['!'];
+      let _word = [this.config.wordStart];
       
-      while (_word[_word.length - 1] != this.config.wordEnd) {
+      while (_word[_word.length - 1] !== this.config.wordEnd) {
         let _tmpWord = _word.slice(0);
         _word[_word.length] = findChar(this.stats, _tmpWord);
       }
       
       _word.splice(0, 1);
       _word.splice(_word.length - 1, 1);
-      _word = _word.join('');
+      _word = _word.join("");
       
       if ((_word.length >= this.config.minLength) && (_word.length <= this.config.maxLength) && (this.config.allowExist || !this.originWords.has(_word))) {
         return _word;
@@ -131,7 +127,7 @@ class Generator {
    * @return {set} The word list.
    * @example
    * Generator.generate(3);
-   * // returns: Set { 'home', 'coding', 'generator' }
+   * // returns: Set { "home", "coding", "generator" }
    */
   genSet(nb = 10) {
     let _words = new Set();
@@ -156,10 +152,10 @@ class Generator {
  * @return {string} The next character.
  */
 function findChar(map, word) {
-  let _lastChar = word.splice(word.length-1,1);
+  let _lastChar = word.splice(word.length - 1,1);
   map = map.get(`${_lastChar}`);
   
-  if (typeof map.values().next().value == 'number') {
+  if (typeof map.values().next().value == "number") {
     let _rand = Math.random();
     let _acc = 0;
     for (var [key, val] of map) {
@@ -183,7 +179,7 @@ function findChar(map, word) {
 function normalize(map) {
   let _acc = 0;
   map.forEach((val, key) => {
-    if (typeof val == 'number') {
+    if (typeof val == "number") {
       _acc += val;
     } else {
       let _map = map;
@@ -193,7 +189,7 @@ function normalize(map) {
   });
   if (_acc > 0) {
     map.forEach((val, key) => {
-      map.set(`${key}`, val/_acc);
+      map.set(`${key}`, val / _acc);
     });
   }
 }
@@ -229,7 +225,7 @@ function incStat(arr, map, char) {
  */
 function genStats(arr, map, chars) {
   if (arr.length > 0) {
-    let _char = arr.splice(arr.length-1,1);
+    let _char = arr.splice(arr.length - 1,1);
     if (!map.has(`${_char}`)) {
       map.set(`${_char}`, new Map());
     }
