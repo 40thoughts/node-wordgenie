@@ -19,7 +19,9 @@ function findChar(map, word) {
     let _acc = 0;
     for (var [key, val] of map) {
       _acc += val;
-      if (_rand <= _acc) return key;
+      if (_rand <= _acc) {
+        return key;
+      }
     }
   } else {
     return findChar(map, word);
@@ -108,15 +110,17 @@ class Generator {
    *        Highest values will give you less variety in the generated words since they would look just like in the original word list.
    *        Avoid high values unless you turn config.allowExist back on.
    * @param {object} [config] - The configuration of the generator.
-   * @param {string} [config.wordStart="!"] - The default character at the beginning of a word when analyzing/generating.
+   * @param {String} [config.wordStart="!"] - The default character at the beginning of a word when analyzing/generating.
    *        Use one that is not in any word of the original list.
    *        This character is used internally, please do not add it in the original word list that you pass in (good word: "doctor", NOT good: "!doctor?").
    *        It's just meant to mark the starting point of a word.
    *        Note: If this character ("!") may appear in you original list, change it to something that don't. Ex.: "£" or "$".
-   * @param {string} [config.wordEnd="?"] - The default character at the end of a word when analyzing/generating.
+   * @param {String} [config.wordEnd="?"] - The default character at the end of a word when analyzing/generating.
    *        Use one that is not in any word of the original list (as above).
    * @param {number} [config.minLength=1] - The minimum length of a word.
    * @param {number} [config.maxLength=20] - The maximum length of a word.
+   * @param {number} [config.timeout=1000] - The timeout (in ms) of the {@link module:index~Generator#genWord genWord} and {@link module:index~Generator#genSet genSet} methods, just in case of huge list generation.
+   *        Tune it when you generate huge lists, or if you use "Infinity" as a parameter in the {@link module:index~Generator#genSet genSet} method.
    * @param {boolean} [config.allowExist=false] - Allow to add existing words (from the original word list).
    */
   constructor(markovLen = 2, config = {}) {
@@ -125,6 +129,7 @@ class Generator {
       wordEnd: "?",
       minLength: 1,
       maxLength: 20,
+      timeout: 1000,
       allowExist: false
     };
     this.config = Object.assign(_config, config);
@@ -136,7 +141,7 @@ class Generator {
   /**
    * Analyse the word list passed in.
    * The use of this method is mandatory before using the {@link module:index~Generator#genWord genWord} or {@link module:index~Generator#genSet genSet} methods since you have to compute the probabilities of each character to appear before being able to generate words.
-   * @param {set} words - The word list.
+   * @param {Set} words - The word list.
    * @example
    * Generator.analyze(Set { "home", "coding", "generator" });
    */
@@ -181,13 +186,14 @@ class Generator {
   
   /**
    * Generate a word.
-   * @return {string} The word generated.
+   * @return {String} The word generated.
    * @example
    * Generator.genWord();
    * // returns: "generator"
    */
   genWord() {
-    while (true) {
+    let _timeout = Date.now() + this.config.timeout;
+    while (Date.now() <= _timeout) {
       let _word = [this.config.wordStart];
       
       while (_word[_word.length - 1] !== this.config.wordEnd) {
@@ -195,9 +201,8 @@ class Generator {
         _word[_word.length] = findChar(this.stats, _tmpWord);
       }
       
-      _word.splice(0, 1);
-      _word.splice(_word.length - 1, 1);
-      _word = _word.join("");
+      let _regex = new RegExp(`\\${this.config.wordStart}|\\${this.config.wordEnd}`, "g");
+      _word = _word.join("").replace(_regex, "");
       
       if ((_word.length >= this.config.minLength) && (_word.length <= this.config.maxLength) && (this.config.allowExist || !this.originWords.has(_word))) {
         return _word;
@@ -207,15 +212,16 @@ class Generator {
   
   /**
    * Generate a word list.
-   * @param {number} [nb=10] - Length of the word list to generate.
-   * @return {set} The word list.
+   * @param {(number|Infinity)} [nb=10] - Length of the word list to generate.
+   * @return {Set} The word list.
    * @example
    * Generator.generate(3);
    * // returns: Set { "home", "coding", "generator" }
    */
   genSet(nb = 10) {
+    let _timeout = Date.now() + this.config.timeout;
     let _words = new Set();
-    while (_words.size < nb) {
+    while ((_words.size < nb) && (Date.now() <= _timeout)) {
       _words.add(this.genWord());
     }
     return _words;
