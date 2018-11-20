@@ -1,7 +1,7 @@
 {
   "name": "wordgenie",
   "version": "1.0.2",
-  "description": "Word generator based on Markov chain with personal word list",
+  "description": "This package is a word (list) generator built on the Markov chain model.",
   "main": "index.js",
   "scripts": {
     "test": "nodemon generator.js",
@@ -12,13 +12,14 @@
     "url": "https://github.com/40thoughts/node-wordgenie.git"
   },
   "keywords": [
+    "markov",
     "word",
+    "words",
     "name",
-    "generator",
-    "wordgenerator",
-    "namegenerator",
-    "word-generator",
-    "name-generator"
+    "names",
+    "procedural",
+    "generation",
+    "generator"
   ],
   "author": "40thoughts <40thoughts@gmail.com>",
   "license": "MIT",
