@@ -1,6 +1,6 @@
 {
   "name": "wordgenie",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Word generator based on Markov chain with personal word list",
   "main": "index.js",
   "scripts": {
