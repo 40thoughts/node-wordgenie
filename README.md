@@ -11,6 +11,8 @@
 ## Description
 This package is a word (list) generator built on the [Markov chain](https://en.wikipedia.org/wiki/Markov_chain) model.
 
+Documentation available [here](https://40thoughts.github.io/node-wordgenie/)
+
 Inspired by [this article](https://sciencetonnante.wordpress.com/2015/10/16/la-machine-a-inventer-des-mots-video/) written (in french) by David Louapre.
 
 It generates words by using the probability of a character to appear after a specific chain of characters.
@@ -55,8 +57,6 @@ tuesdaylighthouse
 demondaylighthouse
 mondaylighthouse
 ```
-
-Documentation available [here](https://40thoughts.github.io/node-wordgenie/)
 
 
 ## Installation
