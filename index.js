@@ -6,9 +6,9 @@
  * Find the next character of a word.
  * @memberOf module:index
  * @private
- * @param {map} map - A map of probabilities.
- * @param {array} word - The array of preceding character of the current word.
- * @return {string} The next character.
+ * @param {Map} map - A map of probabilities.
+ * @param {String[]} word - The array of preceding characters of the current word.
+ * @return {String} The next character.
  */
 function findChar(map, word) {
   let _lastChar = word.splice(word.length - 1,1);
@@ -34,7 +34,7 @@ function findChar(map, word) {
  * This is used to normalize the probability of each character to appear after a specific chain of characters in a scale form 0 to 1 (float number) instead of random integers.
  * @memberOf module:index
  * @private
- * @param {map} map - The map of probabilities.
+ * @param {Map} map - The map of probabilities.
  */
 function normalize(map) {
   if (typeof map.values().next().value == "number") {
@@ -57,9 +57,9 @@ function normalize(map) {
  * Increment probabilities of a character to appear after a specific chain of characters.
  * @memberOf module:index
  * @private
- * @param {array} arr - The array of characters preceding the current character.
- * @param {map} map - The map of probabilities.
- * @param {string} char - The character to increment.
+ * @param {String[]} arr - The array of characters preceding the current character.
+ * @param {Map} map - The map of probabilities.
+ * @param {String} char - The character to increment.
  */
 function incStat(arr, map, char) {
   let _lastChar = arr.splice(arr.length-1,1);
@@ -79,9 +79,9 @@ function incStat(arr, map, char) {
  * Generate the tree of probabilities for each substring passed in.
  * @memberOf module:index
  * @private
- * @param {array} arr - The array of characters from the substring.
- * @param {map} map - A map of probabilities.
- * @param {set} chars - The set of all used chars.
+ * @param {String[]} arr - The array of characters from the substring.
+ * @param {Map} map - A map of probabilities.
+ * @param {Set} chars - The set of all used chars.
  */
 function genStats(arr, map, chars) {
   if (arr.length > 0) {
