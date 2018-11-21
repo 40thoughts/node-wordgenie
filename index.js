@@ -1,5 +1,5 @@
 "use strict";
-//var util = require("util");
+const fs = require("fs");
 
 
 /**
@@ -227,10 +227,59 @@ class Generator {
     return _words;
   }
   
-  /*get export() {
-    //return JSON.stringify([...this.stats]);
-    return util.inspect(this.stats, true, null, false);
-  }*/
+  /**
+   * Save the map of probabilities.
+   * @param {String} path - Path of the savefile to write.
+   * @param {function(data)} cb - Callback after save. "data" is the json result of the probabilities map (the content of the savefile).
+   */
+  saveStats(path, cb = null) {
+    function replacer (key, val) {
+      if (val.__proto__ === Map.prototype) {
+        return {
+          _type: "map",
+          map: [...val]
+        };
+      } else {
+        return val;
+      }
+    }
+    
+    let _data = JSON.stringify(this.stats, replacer);
+    
+    fs.writeFile(path, _data, (err) => {
+      if(err) {
+        console.log(err);
+      } else if (cb) {
+        cb(_data);
+      }
+    });
+  }
+  
+  /**
+   * Load the map of probabilities.
+   * @param {String} path - Path of the savefile to load.
+   * @param {function()} cb - Callback after savefile has been loaded.
+   */
+  loadStats(path, cb = null) {
+    function reviver (key, val) {
+      if (val._type === "map") {
+        return new Map(val.map);
+      } else {
+        return val;
+      }
+    }
+    
+    fs.readFile(path, (err, data) => {
+      if(err) {
+        console.log(err);
+      } else {
+        this.stats = JSON.parse(data, reviver);
+        if (cb) {
+          cb();
+        }
+      }
+    });
+  }
 }
 
 
